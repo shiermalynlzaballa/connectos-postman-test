@@ -1,15 +1,15 @@
 name: ConnectOS - Mock API Environment
 values:
   - key: base_url
-    value: ''
+    value: 'http://dev-unity-uks-test-mock-api.uksouth.azurecontainer.io:3000'
   - key: admin_username
-    value: ''
+    value: Admin123
   - key: admin_password
-    value: ''
+    value: pw0rD!123456
   - key: admin_access_token
     secret: true
   - key: userId
-    value: ''
+    value: '1'
   - key: test_user_email
     value: ''
   - key: test_user_fullName
@@ -17,13 +17,13 @@ values:
   - key: test_user_nickName
     value: ''
   - key: invalid_username
-    value: ''
+    value: invalid_username
   - key: invalid_password
-    value: ''
+    value: invalid_password
   - key: expired_access_token
-    value: ''
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MTcwMDAwMDAwMX0
   - key: not_exists_userId
-    value: ''
+    value: '2'
   - key: invalid_userId
-    value: ''
+    value: abcd@123#
 color: 240
