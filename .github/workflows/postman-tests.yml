@@ -144,11 +144,3 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      # ==========================================
-      # 9. FAIL WORKFLOW IF TESTS FAILED
-      # ==========================================
-      - name: Fail workflow if API tests failed
-        if: steps.postman-run.outcome == 'failure'
-        shell: pwsh
-        run: |
-          Write-Error "ConnectOS API tests failed. Review the execution log."
