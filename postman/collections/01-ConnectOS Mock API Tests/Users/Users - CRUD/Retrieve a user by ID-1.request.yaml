@@ -1,6 +1,6 @@
 $kind: http-request
 name: Retrieve a user by ID
-url: "{{base_url}}/users/{{userID}}"
+url: "{{base_url}}/users/{{userId}}"
 method: GET
 headers:
   Content-Type: application/json
@@ -8,7 +8,7 @@ scripts:
   - type: afterResponse
     code: |
       const jsonData = pm.response.json();
-      const userID = pm.environment.get("userID");
+      const userID = pm.environment.get("userId");
 
       pm.test("Response status code should be 200", () => {
           pm.response.to.have.status(200);

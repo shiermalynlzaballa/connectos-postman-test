@@ -1,6 +1,6 @@
 $kind: http-example
 request:
-  url: "{{base_url}}/users/{{userID}}"
+  url: "{{base_url}}/users/{{userId}}"
   method: GET
   headers:
     Content-Type: application/json
@@ -13,7 +13,7 @@ response:
     Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
     Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
     Content-Length: "106"
-    Date: Thu, 05 Nov 2026 13:03:27 GMT
+    Date: Fri, 06 Nov 2026 07:40:49 GMT
     Connection: keep-alive
     Keep-Alive: timeout=5
   body:

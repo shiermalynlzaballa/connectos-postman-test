@@ -7,8 +7,8 @@ values:
   - key: admin_password
     value: ''
   - key: admin_access_token
-    value: ''
-  - key: userID
+    secret: true
+  - key: userId
     value: ''
   - key: test_user_email
     value: ''
