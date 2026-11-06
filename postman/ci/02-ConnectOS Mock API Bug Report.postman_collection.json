@@ -1,0 +1,1407 @@
+{
+  "info": {
+    "_postman_id": "8fa96f69-1f7c-423d-8452-670f01c9ee67",
+    "name": "02-ConnectOS Mock API Bug Report",
+    "description": "This collection serves as a structured repository of bugs identified during QA testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54248427",
+    "_collection_link": "https://go.postman.co/collection/54248427-8fa96f69-1f7c-423d-8452-670f01c9ee67?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "BUG-001: POST /token - Incorrect Erorr Message",
+      "item": [
+        {
+          "name": "Get an admin access token - Invalid credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and/or password\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{invalid_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{invalid_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "token"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get an admin access token - Invalid credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/token",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "51"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Nov 2026 08:15:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- Returns an incorrect error message containing a backslash (`\\`) instead of a forward slash (`/`).\n    \n\n**Endpoint Test Case:**\n\n- POST /token - Get an admin access token - Invalid credentials\n    \n\n**Actual result:**\n\n- The error message is incorrect.\n    \n- JSON parsing in Postman fails with a `JSONError`.\n    \n\n``` json\n{\n    \"message\": \"Invalid username and\\or password\"\n}\n\n ```\n\n**Expected result:**\n\n- The response error message for invalid credentials should be \"Invalid username and/or password\"."
+    },
+    {
+      "name": "BUG-002: POST /token - Incorrect Response Payload",
+      "item": [
+        {
+          "name": "Get an admin access token - Invalid resource path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 404\", () => {\n    pm.response.to.have.status(404);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get an admin access token - Invalid resource path",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "150"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 03:55:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /auth/login</pre>\n</body>\n</html>\n"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When using a invalid resource path, the API returns an HTML error response instead of a structured API error response.\n    \n\n**Endpoint Test Cases:**\n\n- POST /auth/login - Get an admin access token - Invalid resource path\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response body.\n    \n\n**Actual Result:**\n\n- Returns an HTML error format.\n    \n\n``` html\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n<body>\n    <pre class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Cannot POST /auth/login</pre>\n</body>\n</html>\n\n ```\n\n**Expected Result:**\n\n- API should return a standard error message such as \"Invalid or non-existent resource path."
+    },
+    {
+      "name": "BUG-003: POST /token - Incorrect Response Code and Payload",
+      "item": [
+        {
+          "name": "Get an admin access token - Incorrect method",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response should be 405 Method Not Allowed\npm.test(\"Response status code should be 405\", () => {\n    pm.response.to.have.status(405);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "token"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get an admin access token - Incorrect method",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/token",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "144"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Nov 2026 09:37:19 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /token</pre>\n</body>\n</html>\n"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When executing a negative test for the `POST /token`endpoint, the API returns an incorrect HTTP status code and HTML error message instead of a structured API error response.\n    \n\n**Endpoint Test Case:**\n\n- POST /token - Get an admin access token - Incorrect method\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response.\n    \n\n**Actual Result:**\n\n- Returns an `404 Not Found` status code and HTML error format.\n    \n\n``` html\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n<body>\n    <pre class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Cannot GET /token</pre>\n</body>\n</html>\n\n ```\n\n**Expected Result:**\n\n- API should return a `405 Method Not Allowed` status code and an error message such as \"The endpoint exists, but the HTTP method is not supported.\""
+    },
+    {
+      "name": "BUG-004: POST /users - Invalid JSON Response Formatting",
+      "item": [
+        {
+          "name": "Create a user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonData = pm.response.json();\r\nconst name = pm.environment.get(\"test_user_fullName\");\r\nconst email = pm.environment.get(\"test_user_email\");\r\nconst nickName = pm.environment.get(\"test_user_nickName\");\r\n\r\npm.test(\"Response status code should be 201\", () => {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response matches expected JSON\", () => {\r\n    pm.expect(jsonData).to.deep.equal({\r\n        receivedData: {\r\n            name: name,\r\n            email: email,\r\n            nickName: nickName\r\n        }\r\n    });\r\n});\r\n"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Pre-request: Generate a random user full name\", () => {\r\n    const firstName = pm.variables.replaceIn('{{$randomFirstName}}');\r\n    const lastName = pm.variables.replaceIn('{{$randomLastName}}');\r\n    const nickName = firstName;\r\n    const fullName = `${firstName} ${lastName}`;\r\n\r\n    // Set environment variables for the user full name and nick name\r\n    pm.environment.set(\"test_user_fullName\", fullName);\r\n    pm.environment.set(\"test_user_nickName\", nickName);\r\n\r\n    // Verify set variables\r\n    pm.expect(pm.environment.get(\"test_user_fullName\")).to.equal(fullName);\r\n    pm.expect(pm.environment.get(\"test_user_nickName\")).to.equal(nickName);\r\n\r\n});\r\n\r\npm.test(\"Pre-request: Generate user email and set as collection variable\", () => {\r\n    const d = new Date();\r\n    const p = n => String(n).padStart(2, \"0\");\r\n    const ts = `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}` +\r\n        `${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}` +\r\n        `${String(d.getUTCMilliseconds()).padStart(3, \"0\")}`;\r\n    const userEmail = `testuser_${ts}@nomail.com`;\r\n\r\n    // Set environment variable for the user email\r\n    pm.environment.set(\"test_user_email\", userEmail);\r\n\r\n    // Verify set variables\r\n    pm.expect(pm.environment.get(\"test_user_email\")).to.equal(userEmail);\r\n\r\n    console.log(\"Generated user email:\", userEmail);\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{test_user_fullName}}\",\r\n    \"email\": \"{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create a user",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{test_user_fullName}}\",\r\n    \"email\": \"{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "143"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Nov 2026 12:25:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"receivedData\": \"{\r\n    \"name\": \"Everardo Sawayn\",\r\n    \"email\": \"testuser_20261105122519717@nomail.com\",\r\n    \"nickName\": \"Everardo\"\r\n}\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- The `receivedData` object contains an excess quotation marks resulting in invalid JSON formatting.\n    \n\n**Endpoint Test Case:**\n\n- POST /users - Create a user\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response body.\n    \n\n**Actual Result:**\n\n- The received payload contains quotation marks within the `receivedData` object, causing JSON parsing error.\n    \n\n``` json\n{\n    \"receivedData\": \"{\"name\": \"Everardo Sawayn\",\n    \"email\": \"testuser_20261105122519717@nomail.com\",\n    \"nickName\": \"Everardo\"\n}\"\n}\n\n ```\n\n**Expected Result:**\n\n- Response should contain a valid nested JSON object.\n    \n\n``` json\n{\n  \"receivedData\": {\n    \"name\": \"Everardo Sawayn\",\n    \"email\": \"testuser_20261105122519717@nomail.com\",\n    \"nickName\": \"Everardo\"\n  }\n}\n\n ```"
+    },
+    {
+      "name": "BUG-005: POST /users - No Error Message for Empty Request Body",
+      "item": [
+        {
+          "name": "Create  a user - Empty request body",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// Empty request body negative case",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Empty request body",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "// Empty request body negative case",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 02:50:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Create  a user - Omitted required 'name' property",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "//The required 'name' property is missing from the request body.\r\n\r\n{\r\n    \r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Omitted required 'name' property",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "//The required 'name' property is missing from the request body.\r\n\r\n{\r\n    \r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 02:50:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Create  a user - Omitted required 'email' property",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "//The required 'email' property is missing from the request body.\r\n{\r\n    \"name\": \"Test User\",\r\n\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Omitted required 'email' property",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "//The required 'email' property is missing from the request body.\r\n{\r\n    \"name\": \"Test User\",\r\n\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 02:51:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When sending a POST request with an empty request body, the API returns a `400 Bad Request` status code but does not provide any error message in the response body.\n    \n\n**Endpoint Test Case:**\n\n- POST /users - Create a user - Empty Request Body\n    \n- POST /users - Create a user - Missing required 'name' property\n    \n- POST /users - Create a user - Missing required 'email' property\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response body.\n    \n\n**Actual Result:**\n\n- The response body is empty.\n    \n- No error message is provided.\n    \n\n**Expected Result:**\n\n- The response body should contain a detailed error message such as \"Request body is required.\""
+    },
+    {
+      "name": "BUG-006: POST /users - Missing Validation Error",
+      "item": [
+        {
+          "name": "Create  a user - Name is empty string",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"\", // Empty string and below the minimum length of 1.\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Name is empty string",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"\", // Empty string and below the minimum length of 1.\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 03:20:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Create  a user - Email is empty string",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test User\", \r\n    \"email\": \"\", // Empty string and below the minimum length of 1.\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Email is empty string",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Test User\", \r\n    \"email\": \"\", // Empty string and below the minimum length of 1.\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 03:21:23 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When sending a POST request with an empty string and below the minimun length, the API returns a `400 Bad Request` status code but does not provide any validation error in the response body.\n    \n\n**Endpoint Test Case:**\n\n- POST /users - Create a user - Name is empty string\n    \n- POST /users - Create a user - Email is empty string\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response body.\n    \n\n**Actual Result:**\n\n- The response body is empty.\n    \n- No validation error is provided.\n    \n\n**Expected Result:**\n\n- The response body should contain a detailed validation error such as \"Validation Failed. Name or email string must contain at least 1 character.\""
+    },
+    {
+      "name": "BUG-007: POST /users - Incorrect Response Payload",
+      "item": [
+        {
+          "name": "Create  a user - Invalid resource path (BUG-007)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 404\", () => {\n    pm.response.to.have.status(404);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Invalid resource path (BUG-007)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/user",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "user"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "144"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 04:04:30 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /user</pre>\n</body>\n</html>\n"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When using a invalid resource path, the API returns an HTML error response instead of a structured API error response.\n    \n\n**Endpoint Test Cases:**\n\n- POST /user - Create a user - Invalid resource path\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response body.\n    \n\n**Actual Result:**\n\n- Returns an HTML format error.\n    \n\n``` html\n<html lang=\"en\">\n<head>\n\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n<body>\n    <pre class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Cannot POST /user</pre>\n</body>\n</html>\n\n ```\n\n**Expected Result:**\n\n- API should return a standard error message such as \"Invalid or non-existent resource path."
+    },
+    {
+      "name": "BUG-008: POST /users - Incorrect Response Code and Payload",
+      "item": [
+        {
+          "name": "Create  a user - Incorrect method",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response status code should be 405\", () => {\n    pm.response.to.have.status(405);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create  a user - Incorrect method",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'none'"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "146"
+                },
+                {
+                  "key": "Date",
+                  "value": "Fri, 06 Nov 2026 04:12:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot PATCH /users</pre>\n</body>\n</html>\n"
+            }
+          ]
+        }
+      ],
+      "description": "**Description:**\n\n- When using an incorrect API method (from POST to PATCH), the API returns an incorrect HTTP status code and HTML error message instead of a structured API error response.\n    \n\n**Endpoint Test Case:**\n\n- POST /users - Create a user - Incorrect method\n    \n\n**Steps to Reproduce:**\n\n1. Execute the request.\n    \n2. Observe the response.\n    \n\n**Actual Result:**\n\n- Returns an `404 Not Found` status code and HTML error format.\n    \n\n``` html\n<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n\n<body>\n    <pre>Cannot PATCH /users</pre>\n</body>\n\n</html>\n\n ```\n\n**Expected Result:**\n\n- API should return a `405 Method Not Allowed` status code and an error message such as \"The endpoint exists, but the HTTP method is not supported.\""
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Verify Content-Type\r\npm.test(\"Response header Content-Type is JSON\", () => {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r\n});\r\n\r\npm.test(\"Response body should not be null or empty\", () => {\r\n    pm.response.to.have.jsonBody();\r\n    pm.expect(pm.response.json()).to.not.be.null.and.to.not.be.empty;\r\n});\r\n\r\n// Verify response time\r\npm.test(\"Response time is within 1000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.at.most(1000);\r\n});"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,2511 @@
+{
+  "info": {
+    "_postman_id": "f05d2160-5d00-40c1-9a89-f9ba74e89d35",
+    "name": "01-ConnectOS Mock API Tests",
+    "description": "This collection contains functional tests of ConnectOS mock API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54248427",
+    "_collection_link": "https://go.postman.co/collection/54248427-f05d2160-5d00-40c1-9a89-f9ba74e89d35?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Authentication - CRUD",
+          "item": [
+            {
+              "name": "Get an admin access token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 200\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Token type should be Bearer\", () => {\n    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\n    pm.expect(jsonData.tokenType).to.be.a(\"string\");\n});\n\npm.test(\"Expiry date time should be valid ISO format\", () => {\n    pm.expect(jsonData.expiryDateTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);\n    pm.expect(jsonData.expiryDateTime).to.be.a(\"string\");\n});\n\npm.test(\"Access token should not be empty\", () => {\n    pm.expect(jsonData.accessToken).to.not.be.empty;\n    pm.expect(jsonData.accessToken).to.be.a(\"string\");\n});\n\npm.test(\"Extract access token and set as environment variable\", () => {\n    pm.environment.set(\"admin_access_token\", jsonData.accessToken);\n});\n\npm.test(\"Verify access token should be set in environment variable\", () => {\n    pm.expect(pm.environment.get(\"admin_access_token\")).to.equal(jsonData.accessToken);\n});\n\npm.test(\"Expire in should be equal or greater than 0\", () => {\n    pm.expect(jsonData.expiresIn).to.be.greaterThanOrEqual(0);\n    pm.expect(jsonData.expiresIn).to.be.a(\"number\");\n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/token",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "token"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Get an admin access token",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "305"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Nov 2026 07:21:45 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"tokenType\": \"Bearer\",\n  \"expiryDateTime\": \"2026-11-05T08:51:45Z\",\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTc5MDI1NTM0OCwiaWF0IjoxNzkwMjU1MzQ4fQ.opfCnLMKf1R7pBFPsvrdpF6UsADuusE1_BKFpwS3xuM\",\n  \"expiresIn\": 0\n}"
+                }
+              ]
+            }
+          ],
+          "auth": {
+            "type": "basic",
+            "basic": [
+              {
+                "key": "username",
+                "value": "{{admin_username}}",
+                "type": "string"
+              },
+              {
+                "key": "password",
+                "value": "{{admin_password}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Authentication - Negative Tests",
+          "item": [
+            {
+              "name": "POST - Access Token",
+              "item": [
+                {
+                  "name": "Get an admin access token - Empty credentials (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and/or password\");\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic"
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": ""
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Empty credentials (BUG-001)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": ""
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:16:38 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Empty username (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and/or password\");\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "password",
+                          "value": "{{admin_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Empty username",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:24:41 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Empty password (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and/or password\");\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{admin_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Empty password",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:24:22 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Invalid credentials (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and/or password\");\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{invalid_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{invalid_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Invalid credentials",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:17:30 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Invalid username (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and\\\\or password\");\n});\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{invalid_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{admin_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Invalid username  (BUG-001)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:18:38 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Invalid password  (BUG-001)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const jsonData = pm.response.json();\n\npm.test(\"Response status code should be 401\", () => {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Validate error message\", () => {\n    pm.expect(jsonData.message).to.eql(\"Invalid username and\\\\or password\");\n});\n\npm.test(\"Response body should not be null or empty\", () => {\n    pm.expect(jsonData).to.not.be.null;\n    pm.expect(jsonData).to.not.be.empty;\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{admin_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{invalid_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": ""
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Invalid password",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": ""
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "51"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 08:18:54 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Invalid username and\\or password\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Invalid resource path (BUG-002)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 404\", () => {\n    pm.response.to.have.status(404);\n});\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{admin_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{admin_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/auth/login",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Invalid resource path",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/auth/login",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "auth",
+                            "login"
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "html",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "text/html; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Security-Policy",
+                          "value": "default-src 'none'"
+                        },
+                        {
+                          "key": "X-Content-Type-Options",
+                          "value": "nosniff"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "150"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 09:22:31 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /auth/login</pre>\n</body>\n</html>\n"
+                    }
+                  ]
+                },
+                {
+                  "name": "Get an admin access token - Incorrect method (BUG-003)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "\n// Response should be 405 Method Not Allowed\npm.test(\"Response status code should be 405\", () => {\n    pm.response.to.have.status(405);\n});\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "basic",
+                      "basic": [
+                        {
+                          "key": "username",
+                          "value": "{{admin_username}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "password",
+                          "value": "{{admin_password}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/token",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "token"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Get an admin access token - Incorrect method",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{base_url}}/token",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "token"
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "html",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "text/html; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Security-Policy",
+                          "value": "default-src 'none'"
+                        },
+                        {
+                          "key": "X-Content-Type-Options",
+                          "value": "nosniff"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "144"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Thu, 05 Nov 2026 09:24:04 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /token</pre>\n</body>\n</html>\n"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Users - CRUD",
+          "item": [
+            {
+              "name": "Retrieve all users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\r\n\r\npm.test(\"Response status code should be 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response should contain a list of users\", () => {\r\n    pm.expect(jsonData).to.be.an('array');\r\n});\r\n\r\nif (jsonData.length > 0) {\r\n    pm.test(\"Array should not be empty or null\", () => {\r\n        pm.expect(jsonData).to.not.be.empty.and.not.null;\r\n    });\r\n\r\n    pm.test(\"Array should contain at least one user\", () => {\r\n        pm.expect(jsonData).to.have.lengthOf.at.least(1);\r\n    });\r\n\r\n    pm.test(\"Verify the first user details\", () => {\r\n        const user = jsonData[0];\r\n        pm.expect(user).to.have.property(\"id\", 1);\r\n        pm.expect(user).to.have.property(\"name\", \"John Doe\");\r\n        pm.expect(user).to.have.property(\"email\", \"john@example.com\");\r\n        pm.expect(user).to.have.property(\"nickName\", \"John\");\r\n    });\r\n} else {\r\n    pm.test(\"Array is null or empty\", function () {\r\n        pm.expect.fail(\"Report as a bug.\");\r\n    });\r\n}\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Retrieve all users",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "104"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Nov 2026 10:36:48 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"nickName\": \"John\"\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Create a user  (BUG-004)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Pre-request: Generate a random user full name\", () => {\r\n    const firstName = pm.variables.replaceIn('{{$randomFirstName}}');\r\n    const lastName = pm.variables.replaceIn('{{$randomLastName}}');\r\n    const nickName = firstName;\r\n    const fullName = `${firstName} ${lastName}`;\r\n\r\n    // Set environment variables for the user full name and nick name\r\n    pm.environment.set(\"test_user_fullName\", fullName);\r\n    pm.environment.set(\"test_user_nickName\", nickName);\r\n\r\n    // Verify set variables\r\n    pm.expect(pm.environment.get(\"test_user_fullName\")).to.equal(fullName);\r\n    pm.expect(pm.environment.get(\"test_user_nickName\")).to.equal(nickName);\r\n\r\n});\r\n\r\npm.test(\"Pre-request: Generate user email and set as collection variable\", () => {\r\n    const d = new Date();\r\n    const p = n => String(n).padStart(2, \"0\");\r\n    const ts = `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}` +\r\n        `${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}` +\r\n        `${String(d.getUTCMilliseconds()).padStart(3, \"0\")}`;\r\n    const userEmail = `testuser_${ts}@example.com`;\r\n\r\n    // Set environment variable for the user email\r\n    pm.environment.set(\"test_user_email\", userEmail);\r\n\r\n    // Verify set variables\r\n    pm.expect(pm.environment.get(\"test_user_email\")).to.equal(userEmail);\r\n\r\n    console.log(\"Generated user email:\", userEmail);\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\nconst name = pm.environment.get(\"test_user_fullName\");\nconst email = pm.environment.get(\"test_user_email\");\nconst nickName = pm.environment.get(\"test_user_nickName\");\n\npm.test(\"Response status code should be 201\", () => {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response matches expected JSON\", () => {\n    pm.expect(jsonData).to.deep.equal({\n        receivedData: {\n            name: name,\n            email: email,\n            nickName: nickName\n        }\n    });\n});\n\npm.test(\"ReceivedData object should have the correct properties\", () => {\n    pm.expect(jsonData.receivedData).to.have.property(\"name\").and.to.be.a.string;\n    pm.expect(jsonData.receivedData).to.have.property(\"email\").and.to.be.a.string;\n    pm.expect(jsonData.receivedData).to.have.property(\"nickName\").and.to.be.a.string;\n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{test_user_fullName}}\",\r\n    \"email\": \"{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Create a user",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"{{test_user_fullName}}\",\r\n    \"email\": \"{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "132"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Nov 2026 12:57:12 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"receivedData\": \"{\r\n    \"name\": \"Ara Beer\",\r\n    \"email\": \"testuser_20261105125712461@example.com\",\r\n    \"nickName\": \"Ara\"\r\n}\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Retrieve a user by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\nconst userID = pm.environment.get(\"userId\");\n\npm.test(\"Response status code should be 200\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response should contain the correct user data\", () => {\n    const user = jsonData[0];\n    pm.expect(user.id).to.be.a(\"string\").and.to.equal(userID);\n    pm.expect(user.name).to.be.a(\"string\").and.to.eql(\"John Doe\");\n    pm.expect(user.email).to.be.a(\"string\").and.to.eql(\"john@example.com\");\n    pm.expect(user.nickName).to.be.a(\"string\").and.to.eql(\"John\");\n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users/{{userId}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Retrieve a user by ID",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/users/{{userId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "106"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Fri, 06 Nov 2026 07:40:49 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": \"1\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"nickName\": \"John\"\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Update a user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\nconst name = pm.environment.get(\"test_user_fullName\");\nconst email = pm.environment.get(\"test_user_email\");\nconst nickName = pm.environment.get(\"test_user_nickName\");\nconst updatedName = name + \"_Update\";\nconst updatedEmail = \"update_\" + email;\nconst updatedNickName = nickName + \"_Update\";\n\npm.test(\"Response status code should be 201\", () => {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response matches expected JSON\", () => {\n    pm.expect(jsonData).to.deep.equal({\n        receivedData: {\n            name: updatedName,\n            email: updatedEmail,\n            nickName: updatedNickName\n        }\n    });\n});\n\npm.test(\"Response should contain the updated user data\", () => {\n    pm.expect(jsonData.receivedData.name).to.be.a(\"string\").and.to.equal(updatedName);\n    pm.expect(jsonData.receivedData.email).to.be.a(\"string\").and.to.equal(updatedEmail);\n    pm.expect(jsonData.receivedData.nickName).to.be.a(\"string\").and.to.equal(updatedNickName);\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{test_user_fullName}}_Update\",\r\n    \"email\": \"update_{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}_Update\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Update a user",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"{{test_user_fullName}}_Update\",\r\n    \"email\": \"update_{{test_user_email}}\",\r\n    \"nickName\": \"{{test_user_nickName}}_Update\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "151"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Nov 2026 13:33:42 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"receivedData\": {\n    \"name\": \"Ara Beer_Update\",\n    \"email\": \"update_testuser_20261105125712461@example.com\",\n    \"nickName\": \"Ara_Update\"\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Delete a user by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\r\nconst userID = pm.environment.get(\"userId\");\r\n\r\npm.test(\"Response status code should be 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response message should be 'User deleted successfully'\", () => {\r\n    pm.expect(jsonData.message).to.eql(\"User deleted successfully\");\r\n});\r\n\r\npm.test(\"Response user id should be '\" + userID + \"'\", () => {\r\n    pm.expect(jsonData.id).to.eql(userID);\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users/{{userId}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Delete a user by ID",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/users/{{userId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users",
+                        "{{userId}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "60"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Fri, 06 Nov 2026 08:24:48 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"message\": \"User deleted successfully\",\n  \"id\": \"1\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Retrieve all users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const jsonData = pm.response.json();\r\n\r\npm.test(\"Response status code should be 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response should contain a list of users\", () => {\r\n    pm.expect(jsonData).to.be.an('array');\r\n});\r\n\r\nif (jsonData.length > 0) {\r\n    pm.test(\"Array should not be empty or null\", () => {\r\n        pm.expect(jsonData).to.not.be.empty.and.not.null;\r\n    });\r\n\r\n    pm.test(\"Array should contain at least one user\", () => {\r\n        pm.expect(jsonData).to.have.lengthOf.at.least(1);\r\n    });\r\n\r\n    pm.test(\"Verify the first user details\", () => {\r\n        const user = jsonData[0];\r\n        pm.expect(user).to.have.property(\"id\", 1);\r\n        pm.expect(user).to.have.property(\"name\", \"John Doe\");\r\n        pm.expect(user).to.have.property(\"email\", \"john@example.com\");\r\n        pm.expect(user).to.have.property(\"nickName\", \"John\");\r\n    });\r\n} else {\r\n    pm.test(\"Array is null or empty\", function () {\r\n        pm.expect.fail(\"Report as a bug.\");\r\n    });\r\n}\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Retrieve all users",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Origin",
+                      "value": "*"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Methods",
+                      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Headers",
+                      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "104"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Nov 2026 10:36:48 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"nickName\": \"John\"\n  }\n]"
+                }
+              ]
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{admin_access_token}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Users - Negative Tests",
+          "item": [
+            {
+              "name": "POST - Create User",
+              "item": [
+                {
+                  "name": "Create  a user - Empty request body (BUG-005)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{admin_access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "// Empty request body negative case",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Empty request body (BUG-005)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "// Empty request body negative case",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "0"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:13:43 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Omitted required 'name' property (BUG-005)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "//The required 'name' property is missing from the request body.\r\n\r\n{\r\n    \r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Omitted required 'name' property (BUG-005)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "//The required 'name' property is missing from the request body.\r\n\r\n{\r\n    \r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "0"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:14:01 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Omitted required 'email' property (BUG-005)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "//The required 'email' property is missing from the request body.\r\n{\r\n    \"name\": \"Test User\",\r\n\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Omitted required 'email' property (BUG-005)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "//The required 'email' property is missing from the request body.\r\n{\r\n    \"name\": \"Test User\",\r\n\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "0"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:14:24 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Name is empty string (BUG-006)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"\", // Empty string and below the minimum length of 1.\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Name is empty string (BUG-006)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"name\": \"\", // Empty string and below the minimum length of 1.\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "0"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:41:40 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Email is empty string (BUG-006)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 400\", () => {\r\n    pm.response.to.have.status(400);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Test User\", \r\n    \"email\": \"\", // Empty string and below the minimum length of 1.\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Email is empty string (BUG-006)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"name\": \"Test User\", \r\n    \"email\": \"\", // Empty string and below the minimum length of 1.\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "0"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:41:56 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Invalid resource path (BUG-007)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/user",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Invalid resource path",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/user",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "user"
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "html",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "text/html; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Security-Policy",
+                          "value": "default-src 'none'"
+                        },
+                        {
+                          "key": "X-Content-Type-Options",
+                          "value": "nosniff"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "144"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:47:41 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /user</pre>\n</body>\n</html>\n"
+                    }
+                  ]
+                },
+                {
+                  "name": "Create  a user - Incorrect method (BUG-008)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Response status code should be 405\", () => {\r\n    pm.response.to.have.status(405);\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/users",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "Create  a user - Incorrect method",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuseremail@noemail.com\",\r\n    \"nickName\": \"Test\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{base_url}}/users",
+                          "host": [
+                            "{{base_url}}"
+                          ],
+                          "path": [
+                            "users"
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "html",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "text/html; charset=utf-8"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Methods",
+                          "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+                        },
+                        {
+                          "key": "Access-Control-Allow-Headers",
+                          "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+                        },
+                        {
+                          "key": "Content-Security-Policy",
+                          "value": "default-src 'none'"
+                        },
+                        {
+                          "key": "X-Content-Type-Options",
+                          "value": "nosniff"
+                        },
+                        {
+                          "key": "Content-Length",
+                          "value": "146"
+                        },
+                        {
+                          "key": "Date",
+                          "value": "Fri, 06 Nov 2026 03:51:24 GMT"
+                        },
+                        {
+                          "key": "Connection",
+                          "value": "keep-alive"
+                        },
+                        {
+                          "key": "Keep-Alive",
+                          "value": "timeout=5"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot PATCH /users</pre>\n</body>\n</html>\n"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "GET - Users by ID",
+              "item": []
+            },
+            {
+              "name": "GET - All Users",
+              "item": []
+            },
+            {
+              "name": "PUT - Update User",
+              "item": []
+            },
+            {
+              "name": "DELETE - Delete User",
+              "item": []
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{admin_access_token}}",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Verify Content-Type\r\npm.test(\"Response header Content-Type is JSON\", () => {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r\n});\r\n\r\npm.test(\"Response body should not be null or empty\", () => {\r\n    pm.response.to.have.jsonBody();\r\n    pm.expect(pm.response.json()).to.not.be.null.and.to.not.be.empty;\r\n});\r\n\r\n// Verify response time\r\npm.test(\"Response time is within 1000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.at.most(1000);\r\n});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "test_user_email",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
