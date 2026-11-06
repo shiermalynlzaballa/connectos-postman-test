@@ -1,0 +1,51 @@
+$kind: collection
+name: "BUG-004: POST /users - Invalid JSON Response Formatting"
+description: |-
+  **Description:**
+
+  - The `receivedData` object contains an excess quotation marks resulting in invalid JSON formatting.
+      
+
+  **Endpoint Test Case:**
+
+  - POST /users - Create a user
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - The received payload contains quotation marks within the `receivedData` object, causing JSON parsing error.
+      
+
+  ``` json
+  {
+      "receivedData": "{"name": "Everardo Sawayn",
+      "email": "testuser_20261105122519717@nomail.com",
+      "nickName": "Everardo"
+  }"
+  }
+
+   ```
+
+  **Expected Result:**
+
+  - Response should contain a valid nested JSON object.
+      
+
+  ``` json
+  {
+    "receivedData": {
+      "name": "Everardo Sawayn",
+      "email": "testuser_20261105122519717@nomail.com",
+      "nickName": "Everardo"
+    }
+  }
+
+   ```
+order: 5000

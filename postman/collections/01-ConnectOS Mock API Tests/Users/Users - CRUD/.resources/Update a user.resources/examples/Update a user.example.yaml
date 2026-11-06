@@ -1,0 +1,40 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users"
+  method: PUT
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\r
+
+      \    \"name\": \"{{test_user_fullName}}_Update\",\r
+
+      \    \"email\": \"update_{{test_user_email}}\",\r
+
+      \    \"nickName\": \"{{test_user_nickName}}_Update\"\r
+
+      }"
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Length: "151"
+    Date: Thu, 05 Nov 2026 13:33:42 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "receivedData": {
+          "name": "Ara Beer_Update",
+          "email": "update_testuser_20261105125712461@example.com",
+          "nickName": "Ara_Update"
+        }
+      }
+order: 1000

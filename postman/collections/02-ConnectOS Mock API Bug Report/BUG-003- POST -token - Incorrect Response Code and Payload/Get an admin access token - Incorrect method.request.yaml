@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{base_url}}/token"
+method: GET
+headers:
+  Content-Type: application/json
+auth:
+  type: basic
+  credentials:
+    username: "{{admin_username}}"
+    password: "{{admin_password}}"
+scripts:
+  - type: afterResponse
+    code: |
+      // Response should be 405 Method Not Allowed
+      pm.test("Response status code should be 405", () => {
+          pm.response.to.have.status(405);
+      });
+    language: text/javascript
+examples: .resources/Get an admin access token - Incorrect method.resources/examples
+order: 2000

@@ -1,0 +1,32 @@
+$kind: collection
+description: This collection serves as a structured repository of bugs identified during QA testing.
+scripts:
+  - type: http:afterResponse
+    code: "// Verify Content-Type\r
+
+      pm.test(\"Response header Content-Type is JSON\", () => {\r
+
+      \    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body should not be null or empty\", () => {\r
+
+      \    pm.response.to.have.jsonBody();\r
+
+      \    pm.expect(pm.response.json()).to.not.be.null.and.to.not.be.empty;\r
+
+      });\r
+
+      \r
+
+      // Verify response time\r
+
+      pm.test(\"Response time is within 1000ms\", function () {\r
+
+      \    pm.expect(pm.response.responseTime).to.be.at.most(1000);\r
+
+      });"
+    language: text/javascript

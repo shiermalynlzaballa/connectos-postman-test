@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/token"
+  method: POST
+  headers:
+    Content-Type: application/json
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Length: "305"
+    Date: Thu, 05 Nov 2026 07:21:45 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "tokenType": "Bearer",
+        "expiryDateTime": "2026-11-05T08:51:45Z",
+        "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTc5MDI1NTM0OCwiaWF0IjoxNzkwMjU1MzQ4fQ.opfCnLMKf1R7pBFPsvrdpF6UsADuusE1_BKFpwS3xuM",
+        "expiresIn": 0
+      }
+order: 1000

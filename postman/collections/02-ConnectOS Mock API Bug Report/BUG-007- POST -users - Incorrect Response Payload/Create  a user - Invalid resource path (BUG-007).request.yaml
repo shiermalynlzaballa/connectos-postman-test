@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{base_url}}/user"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Test User\",\r
+
+    \    \"email\": \"testuseremail@noemail.com\",\r
+
+    \    \"nickName\": \"Test\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Response status code should be 404", () => {
+          pm.response.to.have.status(404);
+      });
+    language: text/javascript
+examples: .resources/Create  a user - Invalid resource path (BUG-007).resources/examples
+order: 2000

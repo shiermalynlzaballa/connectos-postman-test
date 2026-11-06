@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/user"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\r
+
+      \    \"name\": \"Test User\",\r
+
+      \    \"email\": \"testuseremail@noemail.com\",\r
+
+      \    \"nickName\": \"Test\"\r
+
+      }"
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: text/html; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Security-Policy: default-src 'none'
+    X-Content-Type-Options: nosniff
+    Content-Length: "144"
+    Date: Fri, 06 Nov 2026 03:47:41 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: html
+    content: |
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="utf-8">
+      <title>Error</title>
+      </head>
+      <body>
+      <pre>Cannot POST /user</pre>
+      </body>
+      </html>
+order: 1000

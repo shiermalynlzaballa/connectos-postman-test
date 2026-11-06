@@ -1,0 +1,23 @@
+name: ConnectOS - Mock API Environment
+values:
+  - key: base_url
+    value: ''
+  - key: admin_username
+    value: ''
+  - key: admin_password
+    value: ''
+  - key: admin_access_token
+    value: ''
+  - key: userID
+    value: ''
+  - key: test_user_email
+    value: ''
+  - key: test_user_fullName
+    value: ''
+  - key: test_user_nickName
+    value: ''
+  - key: invalid_username
+    value: ''
+  - key: invalid_password
+    value: ''
+color: 240

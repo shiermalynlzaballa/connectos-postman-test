@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users/{{userID}}"
+  method: DELETE
+  headers:
+    Content-Type: application/json
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Length: "60"
+    Date: Thu, 05 Nov 2026 13:24:04 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "message": "User deleted successfully",
+        "id": "1"
+      }
+order: 1000

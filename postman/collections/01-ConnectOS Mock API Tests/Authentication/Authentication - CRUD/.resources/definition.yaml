@@ -1,0 +1,7 @@
+$kind: collection
+auth:
+  type: basic
+  credentials:
+    username: "{{admin_username}}"
+    password: "{{admin_password}}"
+order: 2000

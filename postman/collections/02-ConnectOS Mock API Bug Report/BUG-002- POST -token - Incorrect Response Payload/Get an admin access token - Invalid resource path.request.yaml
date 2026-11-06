@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{base_url}}/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+auth:
+  type: basic
+  credentials:
+    username: "{{admin_username}}"
+    password: "{{admin_password}}"
+scripts:
+  - type: afterResponse
+    code: |
+      pm.test("Response status code should be 404", () => {
+          pm.response.to.have.status(404);
+      });
+    language: text/javascript
+examples: .resources/Get an admin access token - Invalid resource path.resources/examples
+order: 2000

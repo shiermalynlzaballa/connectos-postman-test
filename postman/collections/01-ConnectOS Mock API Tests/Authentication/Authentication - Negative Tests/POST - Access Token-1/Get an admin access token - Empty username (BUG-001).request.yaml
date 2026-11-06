@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{base_url}}/token"
+method: POST
+headers:
+  Content-Type: application/json
+auth:
+  type: basic
+  credentials:
+    password: "{{admin_password}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      const jsonData = pm.response.json();
+
+      pm.test("Response status code should be 401", () => {
+          pm.response.to.have.status(401);
+      });
+
+      pm.test("Validate error message", () => {
+          pm.expect(jsonData.message).to.eql("Invalid username and/or password");
+      });
+    language: text/javascript
+examples: .resources/Get an admin access token - Empty username (BUG-001).resources/examples
+order: 2000

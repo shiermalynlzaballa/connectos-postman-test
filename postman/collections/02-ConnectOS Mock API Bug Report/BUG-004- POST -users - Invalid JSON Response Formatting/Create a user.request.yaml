@@ -1,0 +1,125 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{test_user_fullName}}\",\r
+
+    \    \"email\": \"{{test_user_email}}\",\r
+
+    \    \"nickName\": \"{{test_user_nickName}}\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: afterResponse
+    code: "const jsonData = pm.response.json();\r
+
+      const name = pm.environment.get(\"test_user_fullName\");\r
+
+      const email = pm.environment.get(\"test_user_email\");\r
+
+      const nickName = pm.environment.get(\"test_user_nickName\");\r
+
+      \r
+
+      pm.test(\"Response status code should be 201\", () => {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response matches expected JSON\", () => {\r
+
+      \    pm.expect(jsonData).to.deep.equal({\r
+
+      \        receivedData: {\r
+
+      \            name: name,\r
+
+      \            email: email,\r
+
+      \            nickName: nickName\r
+
+      \        }\r
+
+      \    });\r
+
+      });\r\n"
+    language: text/javascript
+  - type: beforeRequest
+    code: "pm.test(\"Pre-request: Generate a random user full name\", () => {\r
+
+      \    const firstName = pm.variables.replaceIn('{{$randomFirstName}}');\r
+
+      \    const lastName = pm.variables.replaceIn('{{$randomLastName}}');\r
+
+      \    const nickName = firstName;\r
+
+      \    const fullName = `${firstName} ${lastName}`;\r
+
+      \r
+
+      \    // Set environment variables for the user full name and nick name\r
+
+      \    pm.environment.set(\"test_user_fullName\", fullName);\r
+
+      \    pm.environment.set(\"test_user_nickName\", nickName);\r
+
+      \r
+
+      \    // Verify set variables\r
+
+      \    pm.expect(pm.environment.get(\"test_user_fullName\")).to.equal(fullName);\r
+
+      \    pm.expect(pm.environment.get(\"test_user_nickName\")).to.equal(nickName);\r
+
+      \r
+
+      });\r
+
+      \r
+
+      pm.test(\"Pre-request: Generate user email and set as collection variable\", () => {\r
+
+      \    const d = new Date();\r
+
+      \    const p = n => String(n).padStart(2, \"0\");\r
+
+      \    const ts = `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}` +\r
+
+      \        `${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}` +\r
+
+      \        `${String(d.getUTCMilliseconds()).padStart(3, \"0\")}`;\r
+
+      \    const userEmail = `testuser_${ts}@nomail.com`;\r
+
+      \r
+
+      \    // Set environment variable for the user email\r
+
+      \    pm.environment.set(\"test_user_email\", userEmail);\r
+
+      \r
+
+      \    // Verify set variables\r
+
+      \    pm.expect(pm.environment.get(\"test_user_email\")).to.equal(userEmail);\r
+
+      \r
+
+      \    console.log(\"Generated user email:\", userEmail);\r
+
+      });\r\n"
+    language: text/javascript
+examples: .resources/Create a user.resources/examples
+order: 1000

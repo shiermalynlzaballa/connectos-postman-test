@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\r
+
+      \    \"name\": \"{{test_user_fullName}}\",\r
+
+      \    \"email\": \"{{test_user_email}}\",\r
+
+      \    \"nickName\": \"{{test_user_nickName}}\"\r
+
+      }"
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Length: "143"
+    Date: Thu, 05 Nov 2026 12:25:20 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: json
+    content: "{
+
+      \  \"receivedData\": \"{\r
+
+      \    \"name\": \"Everardo Sawayn\",\r
+
+      \    \"email\": \"testuser_20261105122519717@nomail.com\",\r
+
+      \    \"nickName\": \"Everardo\"\r
+
+      }\"
+
+      }"
+order: 1000

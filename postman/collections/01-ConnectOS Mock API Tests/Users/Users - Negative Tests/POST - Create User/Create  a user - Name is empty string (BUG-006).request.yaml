@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"\", // Empty string and below the minimum length of 1.\r
+
+    \    \"email\": \"testuseremail@noemail.com\",\r
+
+    \    \"nickName\": \"Test\"\r
+
+    }"
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Response status code should be 400\", () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Create  a user - Name is empty string (BUG-006).resources/examples
+order: 3444

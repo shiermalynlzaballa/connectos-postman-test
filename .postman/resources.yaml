@@ -1,0 +1,12 @@
+workspace:
+  id: 61f3cf08-17e3-4f5f-bff0-98c02b396114
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/01-ConnectOS Mock API Tests: 54248427-f05d2160-5d00-40c1-9a89-f9ba74e89d35
+  environments:
+    ../postman/environments/ConnectOS - Mock API Environment.environment.yaml: 54248427-2b0138f7-207e-49c7-adc3-5fc4b21c4fb2
+  globals:
+    ../postman/globals/workspace.globals.yaml: 8d47b7e0-bbee-4644-8760-96f480289a1d

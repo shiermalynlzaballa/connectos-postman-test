@@ -1,0 +1,33 @@
+$kind: collection
+name: "BUG-006: POST /users - Missing Validation Error"
+description: |-
+  **Description:**
+
+  - When sending a POST request with an empty string and below the minimun length, the API returns a `400 Bad Request` status code but does not provide any validation error in the response body.
+      
+
+  **Endpoint Test Case:**
+
+  - POST /users - Create a user - Name is empty string
+      
+  - POST /users - Create a user - Email is empty string
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - The response body is empty.
+      
+  - No validation error is provided.
+      
+
+  **Expected Result:**
+
+  - The response body should contain a detailed validation error such as "Validation Failed. Name or email string must contain at least 1 character."
+order: 7000

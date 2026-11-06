@@ -1,0 +1,49 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{test_user_fullName}}_Update\",\r
+
+    \    \"email\": \"update_{{test_user_email}}\",\r
+
+    \    \"nickName\": \"{{test_user_nickName}}_Update\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: |-
+      const jsonData = pm.response.json();
+      const name = pm.environment.get("test_user_fullName");
+      const email = pm.environment.get("test_user_email");
+      const nickName = pm.environment.get("test_user_nickName");
+      const updatedName = name + "_Update";
+      const updatedEmail = "update_" + email;
+      const updatedNickName = nickName + "_Update";
+
+      pm.test("Response status code should be 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Response matches expected JSON", () => {
+          pm.expect(jsonData).to.deep.equal({
+              receivedData: {
+                  name: updatedName,
+                  email: updatedEmail,
+                  nickName: updatedNickName
+              }
+          });
+      });
+
+      pm.test("Response should contain the updated user data", () => {
+          pm.expect(jsonData.receivedData.name).to.be.a("string").and.to.equal(updatedName);
+          pm.expect(jsonData.receivedData.email).to.be.a("string").and.to.equal(updatedEmail);
+          pm.expect(jsonData.receivedData.nickName).to.be.a("string").and.to.equal(updatedNickName);
+      });
+    language: text/javascript
+examples: .resources/Update a user.resources/examples
+order: 5000

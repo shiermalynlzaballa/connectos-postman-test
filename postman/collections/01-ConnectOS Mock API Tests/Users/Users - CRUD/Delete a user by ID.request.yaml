@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{base_url}}/users/{{userID}}"
+method: DELETE
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    code: "const jsonData = pm.response.json();\r
+
+      const userID = pm.environment.get(\"userID\");\r
+
+      \r
+
+      pm.test(\"Response status code should be 200\", () => {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response message should be 'User deleted successfully'\", () =>
+      {\r
+
+      \    pm.expect(jsonData.message).to.eql(\"User deleted successfully\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response user id should be '\" + userID + \"'\", () => {\r
+
+      \    pm.expect(jsonData.id).to.eql(userID);\r
+
+      });\r\n"
+    language: text/javascript
+examples: .resources/Delete a user by ID.resources/examples
+order: 5325

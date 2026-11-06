@@ -1,0 +1,45 @@
+$kind: collection
+name: "BUG-007: POST /users - Incorrect Response Payload"
+description: |-
+  **Description:**
+
+  - When using a invalid resource path, the API returns an HTML error response instead of a structured API error response.
+      
+
+  **Endpoint Test Cases:**
+
+  - POST /user - Create a user - Invalid resource path
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - Returns an HTML format error.
+      
+
+  ``` html
+  <html lang="en">
+  <head>
+
+  <html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>Error</title>
+  </head>
+  <body>
+      <pre class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Cannot POST /user</pre>
+  </body>
+  </html>
+
+   ```
+
+  **Expected Result:**
+
+  - API should return a standard error message such as "Invalid or non-existent resource path.
+order: 7163

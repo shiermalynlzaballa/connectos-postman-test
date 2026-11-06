@@ -1,0 +1,26 @@
+$kind: http-request
+name: Retrieve a user by ID
+url: "{{base_url}}/users/{{userID}}"
+method: GET
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    code: |
+      const jsonData = pm.response.json();
+      const userID = pm.environment.get("userID");
+
+      pm.test("Response status code should be 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Response should contain the correct user data", () => {
+          const user = jsonData[0];
+          pm.expect(user.id).to.be.a("string").and.to.equal(userID);
+          pm.expect(user.name).to.be.a("string").and.to.eql("John Doe");
+          pm.expect(user.email).to.be.a("string").and.to.eql("john@example.com");
+          pm.expect(user.nickName).to.be.a("string").and.to.eql("John");
+      });
+    language: text/javascript
+examples: .resources/Retrieve a user by ID-1.resources/examples
+order: 4000

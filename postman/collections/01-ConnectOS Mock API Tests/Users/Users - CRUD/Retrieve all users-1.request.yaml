@@ -1,0 +1,72 @@
+$kind: http-request
+name: Retrieve all users
+url: "{{base_url}}/users"
+method: GET
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    code: "const jsonData = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response status code should be 200\", () => {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response should contain a list of users\", () => {\r
+
+      \    pm.expect(jsonData).to.be.an('array');\r
+
+      });\r
+
+      \r
+
+      if (jsonData.length > 0) {\r
+
+      \    pm.test(\"Array should not be empty or null\", () => {\r
+
+      \        pm.expect(jsonData).to.not.be.empty.and.not.null;\r
+
+      \    });\r
+
+      \r
+
+      \    pm.test(\"Array should contain at least one user\", () => {\r
+
+      \        pm.expect(jsonData).to.have.lengthOf.at.least(1);\r
+
+      \    });\r
+
+      \r
+
+      \    pm.test(\"Verify the first user details\", () => {\r
+
+      \        const user = jsonData[0];\r
+
+      \        pm.expect(user).to.have.property(\"id\", 1);\r
+
+      \        pm.expect(user).to.have.property(\"name\", \"John Doe\");\r
+
+      \        pm.expect(user).to.have.property(\"email\", \"john@example.com\");\r
+
+      \        pm.expect(user).to.have.property(\"nickName\", \"John\");\r
+
+      \    });\r
+
+      } else {\r
+
+      \    pm.test(\"Array is null or empty\", function () {\r
+
+      \        pm.expect.fail(\"Report as a bug.\");\r
+
+      \    });\r
+
+      }\r\n"
+    language: text/javascript
+examples: .resources/Retrieve all users-1.resources/examples
+order: 1311
