@@ -1,0 +1,204 @@
+
+name: ConnectOS API Tests using Postman CLI
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  automated-api-tests:
+    name: Run ConnectOS Mock API Tests
+    runs-on: windows-latest
+
+    # Only run against main
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      # ==========================================
+      # 1. CHECKOUT GITHUB REPOSITORY
+      # ==========================================
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # ==========================================
+      # 2. INSTALL POSTMAN CLI
+      # ==========================================
+      - name: Install Postman CLI
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -InputFormat None -ExecutionPolicy AllSigned -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://dl-cli.pstmn.io/install/win64.ps1'))"
+
+      - name: Verify Postman CLI
+        shell: pwsh
+        run: postman --version
+
+      # ==========================================
+      # 3. LOGIN TO POSTMAN CLI
+      # ==========================================
+      - name: Login to Postman CLI
+        shell: pwsh
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:POSTMAN_API_KEY)) {
+            throw "POSTMAN_API_KEY is not configured in GitHub Secrets."
+          }
+
+          postman login --with-api-key $env:POSTMAN_API_KEY
+
+      # ==========================================
+      # 4. CREATE REPORT DIRECTORIES
+      # ==========================================
+      - name: Create reports directories
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "reports/junit"
+          New-Item -ItemType Directory -Force -Path "reports/json"
+          New-Item -ItemType Directory -Force -Path "reports/html"
+
+      # ==========================================
+      # 5. RUN POSTMAN API COLLECTION
+      # ==========================================
+      - name: Run ConnectOS Mock API Tests
+        id: postman-run
+        continue-on-error: true
+        shell: pwsh
+
+        env:
+          base_url: ${{ vars.BASE_URL }}
+          userId: ${{ vars.USERID }}
+          admin_username: ${{ secrets.ADMIN_USERNAME }}
+          admin_password: ${{ secrets.ADMIN_PASSWORD }}
+          invalid_username: ${{ secrets.INVALID_USERNAME }}
+          invalid_password: ${{ secrets.INVALID_PASSWORD }}
+          
+        run: |
+          $postmanArgs = @(
+            "collection"
+            "run"
+            "54248427-f05d2160-5d00-40c1-9a89-f9ba74e89d35"
+            "-e"
+            "2f3590e9-0384-420e-8ad3-25cc7321cb94"
+
+            "--reporters"
+            "cli,json,junit,html"
+
+            "--reporter-junit-export"
+            "reports/junit/postman-junit.xml"
+
+            "--reporter-json-export"
+            "reports/json/postman-results.json"
+
+            "--reporter-html-export"
+            "reports/html/postman-report.html"
+
+            "--reporter-json-omitAllHeadersAndBody"
+            "--reporter-html-omitAllHeadersAndBody"
+          )
+
+      # ==========================================
+      # 6. DISPLAY POSTMAN TEST SUMMARY
+      # ==========================================
+      - name: Postman Test Summary
+        if: always()
+        shell: pwsh
+
+        env:
+          RUN_OUTCOME: ${{ steps.postman-run.outcome }}
+          RUN_EXIT_CODE: ${{ steps.postman-run.outputs.exit_code }}
+
+        run: |
+          $junitPath = "reports/junit/postman-junit.xml"
+
+          $total = 0
+          $passed = 0
+          $failed = 0
+          $errors = 0
+          $skipped = 0
+
+          if (Test-Path $junitPath) {
+
+            [xml]$junit = Get-Content $junitPath -Raw
+
+            $testCases = @($junit.SelectNodes("//testcase"))
+
+            $total = $testCases.Count
+
+            foreach ($testCase in $testCases) {
+
+              if ($null -ne $testCase.SelectSingleNode("failure")) {
+                $failed++
+              }
+              elseif ($null -ne $testCase.SelectSingleNode("error")) {
+                $errors++
+              }
+              elseif ($null -ne $testCase.SelectSingleNode("skipped")) {
+                $skipped++
+              }
+              else {
+                $passed++
+              }
+            }
+
+            $junitStatus = "Generated"
+
+          }
+          else {
+            $junitStatus = "Not generated - check collection format and execution"
+          }
+
+          if ($env:RUN_OUTCOME -eq "success") {
+            $status = "PASSED"
+          }
+          elseif ($env:RUN_OUTCOME -eq "failure") {
+            $status = "FAILED"
+          }
+          else {
+            $status = "INCOMPLETE"
+          }
+
+          $summary = @"
+          ## Postman API Test Summary
+
+          | Test Information | Results |
+          |---|---|
+          | Collection | ConnectOS Mock API Tests |
+          | Branch | $env:GITHUB_REF_NAME |
+          | Execution Status | **$status** |
+          | Exit Code | $env:RUN_EXIT_CODE |
+          | Total Tests | $total |
+          | Passed | $passed |
+          | Failed | $failed |
+          | Errors | $errors |
+          | Skipped | $skipped |
+          | JUnit Report | $junitStatus |
+
+          ### Generated Reports
+
+          | Report | File |
+          |---|---|
+          | JUnit XML | reports/junit/postman-junit.xml |
+          | JSON | reports/json/postman-results.json |
+          | HTML | reports/html/postman-report.html |
+
+          Download the reports from the workflow Artifacts section.
+
+          "@
+
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value $summary
+
+      # ==========================================
+      # 7. UPLOAD REPORTS EVEN IF TESTS FAIL
+      # ==========================================
+      - name: Upload Postman Test Reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: connectos-postman-test-reports
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14
+
