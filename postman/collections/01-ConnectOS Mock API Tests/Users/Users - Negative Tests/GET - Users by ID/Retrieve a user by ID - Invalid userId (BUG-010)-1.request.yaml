@@ -14,5 +14,6 @@ scripts:
           pm.response.to.have.status(404);
       });
     language: text/javascript
-examples: .resources/Retrieve a user by ID - Invalid userId (BUG-010)-1.resources/examples
+examples: .resources/Retrieve a user by ID - Invalid userId
+  (BUG-010)-1.resources/examples
 order: 1549

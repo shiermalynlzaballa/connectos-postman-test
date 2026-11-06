@@ -14,5 +14,6 @@ scripts:
           pm.response.to.have.status(401);
       });
     language: text/javascript
-examples: .resources/Get an admin access token - No Authorization (BUG-001).resources/examples
+examples: .resources/Get an admin access token - No Authorization
+  (BUG-001).resources/examples
 order: 764

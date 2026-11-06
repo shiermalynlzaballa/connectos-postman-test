@@ -6,13 +6,16 @@ headers:
   Content-Type: application/json
 scripts:
   - type: afterResponse
-    code: |
+    code: >
       const jsonData = pm.response.json();
+
       const userID = pm.environment.get("userId");
+
 
       pm.test("Response status code should be 200", () => {
           pm.response.to.have.status(200);
       });
+
 
       pm.test("Response should contain the correct user data", () => {
           const user = jsonData[0];

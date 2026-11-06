@@ -16,18 +16,26 @@ body:
     }"
 scripts:
   - type: afterResponse
-    code: |-
+    code: >-
       const jsonData = pm.response.json();
+
       const name = pm.environment.get("test_user_fullName");
+
       const email = pm.environment.get("test_user_email");
+
       const nickName = pm.environment.get("test_user_nickName");
+
       const updatedName = name + "_Update";
+
       const updatedEmail = "update_" + email;
+
       const updatedNickName = nickName + "_Update";
+
 
       pm.test("Response status code should be 201", () => {
           pm.response.to.have.status(201);
       });
+
 
       pm.test("Response matches expected JSON", () => {
           pm.expect(jsonData).to.deep.equal({
@@ -38,6 +46,7 @@ scripts:
               }
           });
       });
+
 
       pm.test("Response should contain the updated user data", () => {
           pm.expect(jsonData.receivedData.name).to.be.a("string").and.to.equal(updatedName);

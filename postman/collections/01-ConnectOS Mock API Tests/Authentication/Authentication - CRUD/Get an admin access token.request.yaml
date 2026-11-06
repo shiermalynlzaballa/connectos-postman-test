@@ -5,35 +5,43 @@ headers:
   Content-Type: application/json
 scripts:
   - type: afterResponse
-    code: |
+    code: >
       const jsonData = pm.response.json();
+
 
       pm.test("Response status code should be 200", () => {
           pm.response.to.have.status(200);
       });
+
 
       pm.test("Token type should be Bearer", () => {
           pm.expect(jsonData.tokenType).to.eql("Bearer");
           pm.expect(jsonData.tokenType).to.be.a("string");
       });
 
+
       pm.test("Expiry date time should be valid ISO format", () => {
           pm.expect(jsonData.expiryDateTime).to.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
           pm.expect(jsonData.expiryDateTime).to.be.a("string");
       });
+
 
       pm.test("Access token should not be empty", () => {
           pm.expect(jsonData.accessToken).to.not.be.empty;
           pm.expect(jsonData.accessToken).to.be.a("string");
       });
 
+
       pm.test("Extract access token and set as environment variable", () => {
           pm.environment.set("admin_access_token", jsonData.accessToken);
       });
 
-      pm.test("Verify access token should be set in environment variable", () => {
+
+      pm.test("Verify access token should be set in environment variable", () =>
+      {
           pm.expect(pm.environment.get("admin_access_token")).to.equal(jsonData.accessToken);
       });
+
 
       pm.test("Expire in should be equal or greater than 0", () => {
           pm.expect(jsonData.expiresIn).to.be.greaterThanOrEqual(0);

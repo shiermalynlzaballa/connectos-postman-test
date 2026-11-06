@@ -21,5 +21,6 @@ scripts:
           pm.response.to.have.status(400);
       });
     language: text/javascript
-examples: .resources/Update a user - Omitted required 'email' property (BUG-012).resources/examples
+examples: .resources/Update a user - Omitted required 'email' property
+  (BUG-012).resources/examples
 order: 2182

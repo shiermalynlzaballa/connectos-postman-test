@@ -27,5 +27,6 @@ scripts:
 
       });"
     language: text/javascript
-examples: .resources/Create  a user - Omitted required 'email' property (BUG-006).resources/examples
+examples: .resources/Create  a user - Omitted required 'email' property
+  (BUG-006).resources/examples
 order: 3000

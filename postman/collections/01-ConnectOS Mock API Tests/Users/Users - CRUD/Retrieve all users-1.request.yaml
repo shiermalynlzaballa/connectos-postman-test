@@ -52,7 +52,8 @@ scripts:
 
       \        pm.expect(user).to.have.property(\"name\", \"John Doe\");\r
 
-      \        pm.expect(user).to.have.property(\"email\", \"john@example.com\");\r
+      \        pm.expect(user).to.have.property(\"email\",
+      \"john@example.com\");\r
 
       \        pm.expect(user).to.have.property(\"nickName\", \"John\");\r
 

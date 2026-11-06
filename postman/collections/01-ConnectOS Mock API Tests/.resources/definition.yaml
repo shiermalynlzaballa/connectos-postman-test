@@ -1,7 +1,11 @@
 $kind: collection
 description: This collection contains functional tests of ConnectOS mock API.
 variables:
-  test_user_email: ""
+  - key: test_user_email
+    value: ""
+    secret: false
+  - key: json_web_token_18v4
+    secret: true
 scripts:
   - type: http:afterResponse
     code: "// Verify Content-Type\r

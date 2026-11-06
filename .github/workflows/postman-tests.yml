@@ -80,7 +80,7 @@ jobs:
 
           & postman collection run `
             "54248427-f05d2160-5d00-40c1-9a89-f9ba74e89d35" `
-            -e "2f3590e9-0384-420e-8ad3-25cc7321cb94" `
+            -e "54248427-2b0138f7-207e-49c7-adc3-5fc4b21c4fb2" `
             --reporters cli 2>&1 |
             Tee-Object -FilePath "reports/postman-cli.log"
 

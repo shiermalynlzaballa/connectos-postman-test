@@ -38,9 +38,11 @@ scripts:
 
       \    // Verify set variables\r
 
-      \    pm.expect(pm.environment.get(\"test_user_fullName\")).to.equal(fullName);\r
+      \    pm.expect(pm.environment.get(\"test_user_fullName\")).to.equal(fullN\
+      ame);\r
 
-      \    pm.expect(pm.environment.get(\"test_user_nickName\")).to.equal(nickName);\r
+      \    pm.expect(pm.environment.get(\"test_user_nickName\")).to.equal(nickN\
+      ame);\r
 
       \r
 
@@ -48,15 +50,18 @@ scripts:
 
       \r
 
-      pm.test(\"Pre-request: Generate user email and set as collection variable\", () => {\r
+      pm.test(\"Pre-request: Generate user email and set as collection
+      variable\", () => {\r
 
       \    const d = new Date();\r
 
       \    const p = n => String(n).padStart(2, \"0\");\r
 
-      \    const ts = `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}` +\r
+      \    const ts = `${d.getUTCFullYear()}${p(d.getUTCMonth() +
+      1)}${p(d.getUTCDate())}` +\r
 
-      \        `${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}` +\r
+      \        `${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds\
+      ())}` +\r
 
       \        `${String(d.getUTCMilliseconds()).padStart(3, \"0\")}`;\r
 
@@ -72,7 +77,8 @@ scripts:
 
       \    // Verify set variables\r
 
-      \    pm.expect(pm.environment.get(\"test_user_email\")).to.equal(userEmail);\r
+      \    pm.expect(pm.environment.get(\"test_user_email\")).to.equal(userEmai\
+      l);\r
 
       \r
 
@@ -81,15 +87,20 @@ scripts:
       });"
     language: text/javascript
   - type: afterResponse
-    code: |
+    code: >
       const jsonData = pm.response.json();
+
       const name = pm.environment.get("test_user_fullName");
+
       const email = pm.environment.get("test_user_email");
+
       const nickName = pm.environment.get("test_user_nickName");
+
 
       pm.test("Response status code should be 201", () => {
           pm.response.to.have.status(201);
       });
+
 
       pm.test("Response matches expected JSON", () => {
           pm.expect(jsonData).to.deep.equal({
@@ -100,6 +111,7 @@ scripts:
               }
           });
       });
+
 
       pm.test("ReceivedData object should have the correct properties", () => {
           pm.expect(jsonData.receivedData).to.have.property("name").and.to.be.a.string;
