@@ -1,0 +1,37 @@
+$kind: collection
+name: "BUG-006: POST /users - No Error Message for Empty Request Body"
+description: |-
+  **Description:**
+
+  - When sending a POST request with an empty request body, the API returns a `400 Bad Request` status code but does not provide any error message in the response body.
+      
+
+  **Endpoint Test Case:**
+
+  - POST /users - Create a user - Empty Request Body
+      
+  - POST /users - Create a user - Omitted required 'name' property
+      
+  - POST /users - Create a user - Omitted required 'email' property
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - The response body is empty.
+      
+  - No error message is provided.
+      
+
+  **Expected Result:**
+
+  - For an empty request body, the response body should contain a detailed error message such as "Request body is required."
+      
+  - For missing required properties, the response body should contain a detailed error message such as "Name or email are required."
+order: 7000

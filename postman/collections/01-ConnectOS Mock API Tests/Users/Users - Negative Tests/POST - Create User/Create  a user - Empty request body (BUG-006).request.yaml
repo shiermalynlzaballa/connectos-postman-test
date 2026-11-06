@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: // Empty request body negative case
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Response status code should be 400\", () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Create  a user - Empty request body (BUG-006).resources/examples
+order: 1000

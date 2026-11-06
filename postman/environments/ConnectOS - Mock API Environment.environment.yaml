@@ -20,4 +20,10 @@ values:
     value: ''
   - key: invalid_password
     value: ''
+  - key: expired_access_token
+    value: ''
+  - key: not_exists_userId
+    value: ''
+  - key: invalid_userId
+    value: ''
 color: 240

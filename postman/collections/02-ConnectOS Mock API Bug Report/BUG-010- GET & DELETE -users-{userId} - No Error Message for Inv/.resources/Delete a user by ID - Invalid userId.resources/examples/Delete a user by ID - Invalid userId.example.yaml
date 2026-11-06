@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users/{{invalid_userId}}"
+  method: DELETE
+  headers:
+    Content-Type: application/json
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Length: "0"
+    Date: Fri, 06 Nov 2026 14:48:33 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: json
+    content: ""
+order: 1000

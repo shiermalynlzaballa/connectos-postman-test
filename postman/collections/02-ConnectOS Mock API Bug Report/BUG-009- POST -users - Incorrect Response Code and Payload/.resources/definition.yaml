@@ -1,0 +1,43 @@
+$kind: collection
+name: "BUG-009: POST /users - Incorrect Response Code and Payload"
+description: |-
+  **Description:**
+
+  - When using an incorrect API method (from POST to PATCH), the API returns an incorrect HTTP status code and HTML error message instead of a structured API error response.
+      
+
+  **Endpoint Test Case:**
+
+  - POST /users - Create a user - Incorrect method
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response.
+      
+
+  **Actual Result:**
+
+  - Returns an `404 Not Found` status code and HTML error format.
+      
+
+  ``` html
+
+  <html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>Error</title>
+  </head>
+  <body>
+      <pre class=&#x27;preserveHtml&#x27; class=&#x27;preserveHtml&#x27;>Cannot PATCH /users</pre>
+  </body>
+  </html>
+
+   ```
+
+  **Expected Result:**
+
+  - API should return a `405 Method Not Allowed` status code and an error message such as "The endpoint exists, but the HTTP method is not supported."
+order: 10000

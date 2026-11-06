@@ -1,0 +1,37 @@
+$kind: collection
+name: "BUG-012: PUT /users - No Error Message for Empty Request Body"
+description: |-
+  **Description:**
+
+  - When sending a PUT request with an empty request body, the API returns a `400 Bad Request` status code but does not provide any error message in the response body.
+      
+
+  **Endpoint Test Case:**
+
+  - PUT /users - Update a user - Empty Request Body
+      
+  - PUT /users - Update a user - Missing required 'name' property
+      
+  - PUT /users - Update a user - Missing required 'email' property
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - The response body is empty.
+      
+  - No error message is provided.
+      
+
+  **Expected Result:**
+
+  - For an empty request body, the response body should contain a detailed error message such as "Request body is required."
+      
+  - For missing required property, the response body should contain a detailed error message such as "Name or email are required."
+order: 13000

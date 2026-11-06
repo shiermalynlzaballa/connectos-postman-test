@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: GET
+headers:
+  Content-Type: application/json
+auth:
+  type: inherit
+  credentials:
+    id: collection-cA3ccBAceDEF94194Dcdc7fA-noauth
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Response status code should be 401\", () => {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Retrieve all users - No authorization.resources/examples
+order: 3311

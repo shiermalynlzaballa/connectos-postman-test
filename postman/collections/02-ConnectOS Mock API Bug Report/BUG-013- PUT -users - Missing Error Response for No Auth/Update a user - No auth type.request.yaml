@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{test_user_fullName}}_Update\",\r
+
+    \    \"email\": \"update_{{test_user_email}}\",\r
+
+    \    \"nickName\": \"{{test_user_nickName}}_Update\"\r
+
+    }"
+auth:
+  type: inherit
+  credentials:
+    id: collection-cA3ccBAceDEF94194Dcdc7fA-noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Response status code should be 401", () => {
+          pm.response.to.have.status(401);
+      });
+    language: text/javascript
+examples: .resources/Update a user - No auth type.resources/examples
+order: 7000

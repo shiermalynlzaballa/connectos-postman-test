@@ -1,0 +1,46 @@
+$kind: collection
+name: "BUG-001: POST /token - Incorrect Error Message for Invalid Credentials"
+description: |-
+  **Description:**
+
+  - Returns an incorrect error message containing a backslash (`\`) instead of a forward slash (`/`).
+      
+
+  **Endpoint Test Case:**
+
+  - POST /token - Get an admin access token - Invalid credentials
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual result:**
+
+  - The error message is incorrect.
+      
+  - JSON parsing in Postman fails with a `JSONError`.
+      
+
+  ``` json
+  {
+      "message": "Invalid username and\or password"
+  }
+
+   ```
+
+  **Expected result:**
+
+  - The response error message for invalid credentials should be:
+      
+
+  ``` json
+  {
+      "message": "Invalid username and/or password"
+  }
+
+   ```
+order: 1000

@@ -1,0 +1,31 @@
+$kind: collection
+name: "BUG-011: GET /users - Missing Error Response for No Auth"
+description: |-
+  **Description:**
+
+  - When the auth type is set to `No Auth`, the API returns a `401 Unauthorized` status code but the response body is empty.
+      
+
+  **Endpoint Test Case:**
+
+  - GET /users - Retrieve all users - No authorization
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual Result:**
+
+  - The response body is empty.
+      
+  - No error message is provided.
+      
+
+  **Expected Result:**
+
+  - The response body should contain a detailed error message such as "Bearer token authentication is required."
+order: 12000

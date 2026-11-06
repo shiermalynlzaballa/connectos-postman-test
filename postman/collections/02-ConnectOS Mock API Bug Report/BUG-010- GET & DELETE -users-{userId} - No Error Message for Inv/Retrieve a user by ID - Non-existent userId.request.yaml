@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base_url}}/users/{{not_exists_userId}}"
+method: GET
+headers:
+  Content-Type: application/json
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: afterResponse
+    code: |+
+      //const jsonData = pm.response.json();
+      //const userID = pm.environment.get("invalid_userId");
+
+      pm.test("Response status code should be 404", () => {
+          pm.response.to.have.status(404);
+      });
+
+    language: text/javascript
+examples: .resources/Retrieve a user by ID - Non-existent userId.resources/examples
+order: 3000

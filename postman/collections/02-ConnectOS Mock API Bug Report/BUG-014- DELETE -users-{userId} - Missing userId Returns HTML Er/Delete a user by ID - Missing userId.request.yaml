@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base_url}}/users/"
+method: DELETE
+headers:
+  Content-Type: application/json
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Response status code should be 400\", () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Delete a user by ID - Missing userId.resources/examples
+order: 3446

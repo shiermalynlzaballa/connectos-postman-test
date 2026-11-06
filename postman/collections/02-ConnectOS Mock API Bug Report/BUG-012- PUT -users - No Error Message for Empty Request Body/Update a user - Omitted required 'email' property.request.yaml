@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{test_user_fullName}}_Update\",\r
+
+    \r
+
+    \    \"nickName\": \"{{test_user_nickName}}_Update\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{admin_access_token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Response status code should be 400", () => {
+          pm.response.to.have.status(400);
+      });
+    language: text/javascript
+examples: .resources/Update a user - Omitted required 'email' property.resources/examples
+order: 3182

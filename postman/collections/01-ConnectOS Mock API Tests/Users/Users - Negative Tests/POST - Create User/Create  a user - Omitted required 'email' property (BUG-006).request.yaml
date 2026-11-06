@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{base_url}}/users"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: "//The required 'email' property is missing from the request body.\r
+
+    {\r
+
+    \    \"name\": \"Test User\",\r
+
+    \r
+
+    \    \"nickName\": \"Test\"\r
+
+    }"
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Response status code should be 400\", () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Create  a user - Omitted required 'email' property (BUG-006).resources/examples
+order: 3000

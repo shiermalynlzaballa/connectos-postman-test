@@ -1,0 +1,46 @@
+$kind: collection
+name: "BUG-004: POST /token - Incorrect Error Message for Invalid Access Token"
+description: |-
+  **Description:**
+
+  - When sending a request with an expired or invalid access token, the API correctly returns an HTTP `401 Unauthorized` status code but the error message in the response body is incorrect.
+      
+
+  **Endpoint Test Case:**
+
+  - POST /token - Get an admin access token - Expired access token
+      
+
+  **Steps to Reproduce:**
+
+  1. Execute the request.
+      
+  2. Observe the response body.
+      
+
+  **Actual result:**
+
+  - The error message is incorrect.
+      
+  - JSON parsing in Postman fails with a `JSONError`.
+      
+
+  ``` json
+  {
+      "message": "Invalid username and\or password"
+  }
+
+   ```
+
+  **Expected result:**
+
+  - The response error message should contain an accurate authentication failure such as:
+      
+
+  ``` json
+  {
+      "message": "Access token is expired or invalid"
+  }
+
+   ```
+order: 5000

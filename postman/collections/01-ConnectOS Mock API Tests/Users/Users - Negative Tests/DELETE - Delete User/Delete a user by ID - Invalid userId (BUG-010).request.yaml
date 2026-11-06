@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{base_url}}/users/{{invalid_userId}}"
+method: DELETE
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    code: "//const jsonData = pm.response.json();\r
+
+      //const userID = pm.environment.get(\"invalid_userId\");\r
+
+      \r
+
+      pm.test(\"Response status code should be 404\", () => {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });"
+    language: text/javascript
+examples: .resources/Delete a user by ID - Invalid userId (BUG-010).resources/examples
+order: 1000

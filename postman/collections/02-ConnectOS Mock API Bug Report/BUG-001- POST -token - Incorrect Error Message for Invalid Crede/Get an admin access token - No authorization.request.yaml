@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{base_url}}/token"
+method: POST
+headers:
+  Content-Type: application/json
+auth:
+  type: inherit
+  credentials:
+    id: collection-cA3ccBAceDEF94194Dcdc7fA-noauth
+scripts:
+  - type: afterResponse
+    code: |
+      pm.test("Response status code should be 401", () => {
+          pm.response.to.have.status(401);
+      });
+    language: text/javascript
+examples: .resources/Get an admin access token - No authorization.resources/examples
+order: 10

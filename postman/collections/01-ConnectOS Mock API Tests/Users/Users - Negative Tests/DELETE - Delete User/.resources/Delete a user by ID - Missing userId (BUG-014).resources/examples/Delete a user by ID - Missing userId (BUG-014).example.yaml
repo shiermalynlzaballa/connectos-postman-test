@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users/"
+  method: DELETE
+  headers:
+    Content-Type: application/json
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: text/html; charset=utf-8
+    Access-Control-Allow-Origin: "*"
+    Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+    Access-Control-Allow-Headers: Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With
+    Content-Security-Policy: default-src 'none'
+    X-Content-Type-Options: nosniff
+    Content-Length: "148"
+    Date: Fri, 06 Nov 2026 15:28:07 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+  body:
+    type: html
+    content: |
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="utf-8">
+      <title>Error</title>
+      </head>
+      <body>
+      <pre>Cannot DELETE /users/</pre>
+      </body>
+      </html>
+order: 1000
